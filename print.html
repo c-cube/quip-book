@@ -277,11 +277,69 @@ Unsat (0.003/0.000/0.000)
     (hres (init (assert $t2)) (p1 (refl $t2))))
    (stepc c4 (cl )
     (hres
-    (init (ref c0)) (r1 (ref c3))
-    (r1 (ref c2)) (r1 (ref c1)))))))
+     (init (ref c0)) (r1 (ref c3))
+     (r1 (ref c2)) (r1 (ref c1)))))))
 </code></pre>
 <p><strong>NOTE</strong>: the proof uses the S-expression format, but I do hope to have a
 more efficient binary format relatively early on.</p>
+<h2 id="detailed-explanation"><a class="header" href="#detailed-explanation">Detailed explanation</a></h2>
+<ul>
+<li>
+<p>proof start with <code>(quip &lt;version&gt; &lt;proof&gt;)</code>. For now <code>version</code> is 1.</p>
+</li>
+<li>
+<p><code>(steps (&lt;assumptions&gt;) (&lt;steps&gt;))</code> is the main composite proof rule.
+Let's ignore the assumptions for now. Each step in this rule
+is either a symbol definition (see below) or a <code>(stepc &lt;name&gt; &lt;clause&gt; &lt;proof&gt;)</code>,
+which introduce a name for an intermediate lemma (the clause)
+as proved by the sub-proof.</p>
+<p>A side-effect of this is that you can have partially correct<sup class="footnote-reference"><a href="#1">1</a></sup> proofs
+if a step is used correctly in the remainder of the proof, but its proof is
+invalid.</p>
+</li>
+<li>
+<p><code>(deft $t1 (f a))</code> is a term definition.
+It defines the new symbol <code>$t1</code> as a syntactic shortcut for
+the term <code>(f a)</code>, to be expanded as early as possible by the proof checker.</p>
+<p>Similarly, <code>$t5</code> is short for <code>(= c (f b))</code>.</p>
+<p>This kind of definition becomes important in larger proofs, where re-printing
+a whole term every time it is used would be wasteful and would bloat proof
+files. Using definitions we can preserve a lot of sharing in the proofs.</p>
+</li>
+<li>
+<p><code>(stepc c0 …)</code> is the first real step of the proof.
+Here, <code>c0</code> is the clause <code>{ - $t2, - $t3, + $t5</code>,
+and is proved by the proof <code>(cc-lemma …)</code> (a congruence closure lemma,
+i.e. a tautology of equality). It is, in essence, the proof we seek;
+the rest of the steps are used to derive a contradiction by
+deducing &quot;false&quot; from <code>c0</code> and our
+initial assumptions.</p>
+</li>
+<li>
+<p>the steps deducing <code>c1</code>, <code>c2</code>, and <code>c3</code> do so by using <code>assert</code>
+(meaning that the clause is actually an assumption of the initial problem),
+and then &quot;preprocessing&quot; them.</p>
+<p>For <code>(stepc c1 (cl (- $t5)) (hres (init (assert (not $t5))) (p1 (refl $t5))))</code> we get the following
+tree:</p>
+<p>\[
+\cfrac{
+\cfrac{}{$t5 ~\tiny{(assume)}} \qquad
+\cfrac{}{$t5 = $t5  ~\tiny{(refl)}}
+}{$t5  ~\tiny{(para1)}}
+\]</p>
+<p>In this tree we can see the general shape of preprocessing terms: assume the
+initial term <code>± t</code>, prove <code>+ (t = u)</code> (where <code>u</code> is the simplified version),
+and then use boolean paramodulation to obtain <code>± u</code>.</p>
+<p>It just so happens
+that no meaningful simplification occurred and so <code>t</code> and <code>u</code> are the same,
+and sidekick did not shorten the proof accordingly into
+<code>(stepc c1 (cl (- $t5)) (assert (not $t5)))</code></p>
+</li>
+</ul>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>or partially incorrect, depending on your point of view. Glass half-full
+and all that.</p>
+</div>
 <h2 id="quip-for-the-automatic-theorem-prover"><a class="header" href="#quip-for-the-automatic-theorem-prover">Quip for the Automatic Theorem Prover</a></h2>
 <p>Quip is biased towards being easy to <em>produce</em> from theorem provers and SMT
 solvers, while remaining reasonably efficient to check.</p>
