@@ -269,12 +269,19 @@ Unsat (0.003/0.000/0.000)
    (deft $t5 (= c $t4))
    (stepc c0 (cl (- $t2) (- $t3) (+ $t5))
     (cc-lemma (cl (- $t2) (- $t3) (+ $t5))))
-   (stepc c1 (cl (- $t5)) (hres (init (assert (not $t5))) (p1 (refl $t5))))
-   (stepc c2 (cl (+ $t3)) (hres (init (assert $t3)) (p1 (refl $t3))))
-   (stepc c3 (cl (+ $t2)) (hres (init (assert $t2)) (p1 (refl $t2))))
+   (stepc c1 (cl (- $t5))
+    (hres (init (assert (not $t5))) (p1 (refl $t5))))
+   (stepc c2 (cl (+ $t3))
+    (hres (init (assert $t3)) (p1 (refl $t3))))
+   (stepc c3 (cl (+ $t2))
+    (hres (init (assert $t2)) (p1 (refl $t2))))
    (stepc c4 (cl )
-    (hres (init (ref c0)) (r1 (ref c3)) (r1 (ref c2)) (r1 (ref c1)))))))
+    (hres
+    (init (ref c0)) (r1 (ref c3))
+    (r1 (ref c2)) (r1 (ref c1)))))))
 </code></pre>
+<p><strong>NOTE</strong>: the proof uses the S-expression format, but I do hope to have a
+more efficient binary format relatively early on.</p>
 <h2 id="quip-for-the-automatic-theorem-prover"><a class="header" href="#quip-for-the-automatic-theorem-prover">Quip for the Automatic Theorem Prover</a></h2>
 <p>Quip is biased towards being easy to <em>produce</em> from theorem provers and SMT
 solvers, while remaining reasonably efficient to check.</p>
@@ -351,21 +358,6 @@ can deduce \( C\sigma \).</p>
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         
