@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>For the Theorem Prover - Quip: Quick Proofs</title>
+        <title>Full example - Quip: Quick Proofs</title>
         
         
 
@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html" class="active"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li><li class="chapter-item expanded "><a href="../reference/example.html"><strong aria-hidden="true">2.5.</strong> Full example</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li><li class="chapter-item expanded "><a href="../reference/example.html" class="active"><strong aria-hidden="true">2.5.</strong> Full example</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -166,46 +166,88 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="quip-for-the-automatic-theorem-prover"><a class="header" href="#quip-for-the-automatic-theorem-prover">Quip for the Automatic Theorem Prover</a></h2>
-<p>Quip is biased towards being easy to <em>produce</em> from theorem provers and SMT
-solvers, while remaining reasonably efficient to check.</p>
-<p>The easiness comes from several aspects:</p>
-<ul>
-<li>
-<p>redundancy in rules: many rules will have a general form (e.g. a congruence
-closure lemma, or hyper-resolution with \( n \) steps),
-and some shorter forms for the common case (e.g. unary resolution
-or the reflexivity rule).</p>
-</li>
-<li>
-<p>rules can be quite high-level, requiring the proof checkers to reimplement
-congruence closure, resolution, etc.</p>
-</li>
-<li>
-<p>the proof rules do not need to always specify their result, only enough
-information that the conclusion can be reconstructed.</p>
-</li>
-<li>
-<p>proofs are based on a <em>proof language</em> (&quot;proof terms&quot;) that allow for easy
-composition of several steps. This way it's not necessary to name each single
-clause occurring in the proof.</p>
-</li>
-</ul>
+                        <h1 id="full-example"><a class="header" href="#full-example">Full example</a></h1>
+<p>We're going to explore a bigger example: the proof of unsatisfiability
+of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
+<p>It starts normally:</p>
+<pre><code class="language-smt2">(quip 1
+ (steps ()
+</code></pre>
+<p>followed by a bundle of term definitions for better sharing:</p>
+<pre><code class="language-smt2">  ((deft $t1 (= x0 y0))
+   (deft $t2 (= y0 x1))
+   (deft $t3 (and $t1 $t2))
+   (deft _tseitin_and_0 (and $t1 $t2))
+   (deft $t4 (= x0 z0))
+   (deft $t5 (= x1 z0))
+   (deft $t6 (and $t4 $t5))
+   (deft _tseitin_and_1 (and $t4 $t5))
+   (deft $t7 (or $t3 $t6))
+   (deft _tseitin_or_2 (or $t3 $t6))
+   (deft $t8 (= x0 x1))
+   (deft $t9 (not $t8))
+   (deft $t10 (and $t7 $t9))
+   (deft _tseitin_and_3 (and $t7 $t9))
+   (stepc c0 (cl (- $t1) (- $t2) (+ $t8))
+</code></pre>
+<p>and then the actual proof:</p>
+<pre><code class="language-smt2">   (stepc c0 (cl (- $t1) (- $t2) (+ $t8))
+    (cc-lemma (cl (- $t1) (- $t2) (+ $t8))))
+   (stepc c1 (cl (- _tseitin_and_3) (- $t8))
+    (bool-c (cl (- $t8) (- _tseitin_and_3))))
+   (stepc c2 (cl (+ _tseitin_and_3))
+    (hres (init (assert $t10))
+     (p1
+      (cc-lemma-imply (refl $t10))
+       (= $t10 _tseitin_and_3))))
+   (stepc c3 (cl (- $t8)) (hres (init (ref c1)) (r1 (ref c2))))
+   (stepc c4 (cl (- _tseitin_and_0) (+ $t2))
+    (bool-c (cl (+ $t2) (- _tseitin_and_0))))
+   (stepc c5
+    (cl (- _tseitin_or_2) (+ _tseitin_and_1) (+ _tseitin_and_0))
+    (bool-c (cl (+ _tseitin_and_1) (+ _tseitin_and_0) (- _tseitin_or_2))))
+   (stepc c6 (cl (- $t4) (- $t5) (+ $t8))
+    (cc-lemma (cl (- $t4) (- $t5) (+ $t8))))
+   (stepc c7 (cl (- $t5) (- $t4))
+    (hres (init (ref c6)) (r1 (ref c3))))
+   (stepc c8 (cl (- _tseitin_and_1) (+ $t4))
+    (bool-c (cl (+ $t4) (- _tseitin_and_1))))
+   (stepc c9 (cl (- _tseitin_and_1) (+ $t5))
+    (bool-c (cl (+ $t5) (- _tseitin_and_1))))
+   (stepc c10 (cl (- _tseitin_and_1))
+    (hres (init (ref c7)) (r (pivot $t5) (ref c9))
+      (r (pivot $t4) (ref c8))))
+   (stepc c11 (cl (- _tseitin_and_3) (+ _tseitin_or_2))
+    (bool-c (cl (+ _tseitin_or_2) (- _tseitin_and_3))))
+   (stepc c12 (cl (+ _tseitin_or_2))
+    (hres (init (ref c11)) (r1 (ref c2))))
+   (stepc c13 (cl (+ _tseitin_and_0))
+    (hres (init (ref c5)) (r1 (ref c12)) (r1 (ref c10))))
+   (stepc c14 (cl (+ $t2)) (hres (init (ref c4)) (r1 (ref c13))))
+   (stepc c15 (cl (- _tseitin_and_0) (+ $t1))
+    (bool-c (cl (+ $t1) (- _tseitin_and_0))))
+   (stepc c16 (cl (+ $t1))
+    (hres (init (ref c15)) (r1 (ref c13))))
+   (stepc c17 (cl )
+    (hres (init (ref c0)) (r1 (ref c16))
+     (r1 (ref c14)) (r1 (ref c3)))))))
+</code></pre>
+<p>Note that the last step returns the empty clause:</p>
+<pre><code class="language-smt2">   (stepc c17 (cl )
+    (hres (init (ref c0)) (r1 (ref c16))
+     (r1 (ref c14)) (r1 (ref c3)))))))
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../intro/example.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../reference/rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
-                        
-                            <a rel="next" href="../intro/for-proof-checkers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -215,15 +257,11 @@ clause occurring in the proof.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../intro/example.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../reference/rules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
-                
-                    <a rel="next" href="../intro/for-proof-checkers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 
             </nav>
 

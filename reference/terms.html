@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html" class="active"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html" class="active"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li><li class="chapter-item expanded "><a href="../reference/example.html"><strong aria-hidden="true">2.5.</strong> Full example</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -195,15 +195,31 @@ equal; the proof checker can just expand <code>c</code> into <code>(f a b)</code
 and then forget entirely about <code>c</code>.</p>
 </li>
 <li>
-<p><strong>Binders</strong>, such as \( \lambda (x:ty). t \), or \( \forall (x:ty). t \).
+<p><strong>Binders</strong>, such as \( \lambda (x:\tau). t \), or \( \forall (x:\tau). t \).
 The latter is a shortcut for the application
-\( \text{forall}~ (\lambda (x:ty). term) \)
-(where \( \text{forall} \) is a constant of type \( \Pi a. (a \to \text{bool}) \to \text{bool} \) ).</p>
-</li>
-</ul>
+\( \text{forall}~ (\lambda (x:\tau). term) \)
+(where \( \text{forall} \)
+is a constant of type \( \Pi a. (a \to \text{bool}) \to \text{bool} \) ).</p>
 <p>With lambda-abstraction comes a handful of axioms:
 \( \beta\)-reduction, and \( \eta \)-expansion
 (more details in <a href="./rules.html">the rules section</a>).</p>
+</li>
+<li>
+<p><strong>Box</strong> is a special term constructor that has no logical meaning.
+We denote it <code>(box &lt;clause&gt;)</code>, and it is equivalent to the boolean term
+represented by the clause. The use case of box is to hide the clause within
+so that it appears as an atomic constant to most
+rules but the ones specifically concerned with handling <code>box</code>.</p>
+<p>For example <code>(box (cl (- (forall (x:τ) (p x))) (+ (p a))))</code>
+represents the boolean term \( \lnot (\forall x:τ. p~ x) \lor p~ a \).</p>
+<p>The benefit of <code>box</code> becomes apparent when one tries to use clauses to
+represent conditional proofs. If I want to represent that I have a proof
+of <code>A</code> assuming a proof of <code>B</code>, where <code>B</code> is a clause and not just a literal,
+and <code>A</code> is the clause <code>{l_1, …, l_n}</code>, then
+the simplest way to do so is: <code>(cl (cl l_1 … l_n (- (box B))))</code>.</p>
+<p>See <a href="./rules.html#box">the rules about box</a>.</p>
+</li>
+</ul>
 
                     </main>
 
