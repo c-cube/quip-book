@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="intro/for-atp.html"><strong aria-hidden="true">1.2.</strong> For the Automatic Theorem Prover</a></li><li class="chapter-item expanded "><a href="intro/for-proof-checkers.html"><strong aria-hidden="true">1.3.</strong> For the Proof Checker</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Automatic Theorem Prover</a></li><li class="chapter-item expanded "><a href="intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -170,6 +170,12 @@
 <p>Welcome to the Quip documentation. Quip (&quot;Quick Proofs&quot;) is an experimental
 proof format for first-order and higher-order automatic theorem provers,
 designed to be easy to produce, and reasonably easy to check.</p>
+<p>There are two sides to this documentation:</p>
+<ul>
+<li>the point of view of theorem provers, SMT solvers, etc.
+that might <em>produce</em> Quip proofs;</li>
+<li>the point of view of proof checkers that aim at validating such proofs.</li>
+</ul>
 <p><strong>NOTE</strong>: the proof format is experimental and its design will most likely
 fluctuate a lot for a while as checkers and proof-producing provers are
 developed.</p>
@@ -203,6 +209,21 @@ developed.</p>
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         
