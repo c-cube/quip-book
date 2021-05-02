@@ -10,5 +10,6 @@
   * [Substitutions]()
   * [Clauses](./reference/clauses.md)
   * [Proof Rules](./reference/rules.md)
+  * [Full example](./reference/example.md)
 - [S-expression Format]()
 - [Binary Format]()

@@ -20,13 +20,13 @@ These are:
   The core rules are resolution:
 
   \\[
-    \cfrac{C1 \lor l  \qquad         C2 \lor \lnot l}{ C1 \lor C2 }
+    \cfrac{C_1 \lor l  \qquad         C_2 \lor \lnot l}{ C_1 \lor C_2 }
   \\]
 
   and boolean paramodulation (where \\(t\\) is a boolean term):
 
   \\[
-    \cfrac{C1 \lor (t = u)  \qquad         C2 \lor t}{ C1 \lor C2 \lor u }
+    \cfrac{C_1 \lor (t = u)  \qquad         C_2 \lor t}{ C1 \lor C_2 \lor u }
   \\]
 
   In practice, in the proof format, "hres" is the rule used to perform

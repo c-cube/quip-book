@@ -28,11 +28,30 @@ The term can be constructed in the following ways:
   equal; the proof checker can just expand `c` into `(f a b)` at parse time
   and then forget entirely about `c`.
 
-- **Binders**, such as \\( \lambda (x:ty). t \\), or \\( \forall (x:ty). t \\).
+- **Binders**, such as \\( \lambda (x:\tau). t \\), or \\( \forall (x:\tau). t \\).
   The latter is a shortcut for the application
-  \\( \text{forall}~ (\lambda (x:ty). term) \\)
-  (where \\( \text{forall} \\) is a constant of type \\( \Pi a. (a \to \text{bool}) \to \text{bool} \\) ).
+  \\( \text{forall}~ (\lambda (x:\tau). term) \\)
+  (where \\( \text{forall} \\)
+  is a constant of type \\( \Pi a. (a \to \text{bool}) \to \text{bool} \\) ).
 
-With lambda-abstraction comes a handful of axioms:
-\\( \beta\\)-reduction, and \\( \eta \\)-expansion
-(more details in [the rules section](./rules.md)).
+  With lambda-abstraction comes a handful of axioms:
+  \\( \beta\\)-reduction, and \\( \eta \\)-expansion
+  (more details in [the rules section](./rules.md)).
+
+- **Box** is a special term constructor that has no logical meaning.
+  We denote it `(box <clause>)`, and it is equivalent to the boolean term
+  represented by the clause. The use case of box is to hide the clause within
+  so that it appears as an atomic constant to most
+  rules but the ones specifically concerned with handling `box`.
+
+  For example `(box (cl (- (forall (x:τ) (p x))) (+ (p a))))`
+  represents the boolean term \\( \lnot (\forall x:τ. p~ x) \lor p~ a \\).
+
+  The benefit of `box` becomes apparent when one tries to use clauses to
+  represent conditional proofs. If I want to represent that I have a proof
+  of `A` assuming a proof of `B`, where `B` is a clause and not just a literal,
+  and `A` is the clause `{l_1, …, l_n}`, then
+  the simplest way to do so is: `(cl (cl l_1 … l_n (- (box B))))`.
+
+  See [the rules about box](./rules.md#box).
+
