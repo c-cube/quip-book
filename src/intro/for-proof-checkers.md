@@ -14,12 +14,23 @@ These are:
   (See for example the [EGG paper]).
 
 - **Resolution**: 
-  clause-level reasoning is done via multiple steps of resolution.
+  clause-level reasoning is done via multiple steps of resolution and
+  boolean paramodulation.
 
-  The core rule is:
+  The core rules are resolution:
+
   \\[
     \cfrac{C1 \lor l  \qquad         C2 \lor \lnot l}{ C1 \lor C2 }
   \\]
+
+  and boolean paramodulation (where \\(t\\) is a boolean term):
+
+  \\[
+    \cfrac{C1 \lor (t = u)  \qquad         C2 \lor t}{ C1 \lor C2 \lor u }
+  \\]
+
+  In practice, in the proof format, "hres" is the rule used to perform
+  a series of such steps from an initial clause.
 
 - **Instantiation**:
   A clause \\( C \\) contains free variables \\( \\{ x_1, \ldots, x_n \\} \\).

@@ -20,3 +20,4 @@ The easiness comes from several aspects:
 - proofs are based on a _proof language_ ("proof terms") that allow for easy
   composition of several steps. This way it's not necessary to name each single
   clause occurring in the proof.
+
