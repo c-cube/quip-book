@@ -1,0 +1,10 @@
+[book]
+authors = ["Simon Cruanes"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Quip: Quick Proofs"
+
+[output.html]
+mathjax-support = true
+
