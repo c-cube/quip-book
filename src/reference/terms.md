@@ -34,8 +34,8 @@ The term can be constructed in the following ways:
   (where \\( \text{forall} \\)
   is a constant of type \\( \Pi a. (a \to \text{bool}) \to \text{bool} \\) ).
 
-  With lambda-abstraction comes a handful of axioms:
-  \\( \beta\\)-reduction, and \\( \eta \\)-expansion
+  With lambda-abstraction comes
+  \\( \beta\\)-reduction <!--, and \\( \eta \\)-expansion -->
   (more details in [the rules section](./rules.md)).
 
 - **Box** is a special term constructor that has no logical meaning.

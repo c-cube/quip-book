@@ -157,6 +157,33 @@
   | `(= (and t1…tn false u1…um) false)` |
   | `(= (and true true) true)` |
 
+- **\\( \beta \\)-reduction** (`(beta-red <term> <term>)`):
+  Given `(lambda (x:τ) body)` and `u`, returns the clause
+  `(cl (+ (= ((lambda (x:τ) body) u) body[x := u])))`
+  where `body[x := u]` denotes the term obtained by substituting `x` with `u`
+  in `body` in a capture avoiding way.
+
+  Mathematically:
+  \\[
+    \vdash (\lambda x:\tau. t)~ u = t[x := u]
+  \\]
+
+<!-- TODO? or unecessary?
+- **\\( \eta \\)-expansion** (`(eta-exp <term>)`):
+  Given a term `t` of arrow type `a → b`, returns the lemma
+  `(cl (+ (= t ((lambda (x:a) t) x))))` for a variable `x` of type `a`.
+
+  Mathematically:
+  \\[
+    (\lambda x:\tau. t)~ x = t
+  \\]
+  -->
+
+
+TODO: instantiation
+
+TODO: reasoning under quantifiers
+
 ## Composite proofs
 
 The main structuring construct for proofs is `steps`. Its structure is
@@ -170,27 +197,86 @@ The main structuring construct for proofs is `steps`. Its structure is
   
 - Each **step** is one of:
 
-  * **Term definition** `(deft <name> <term>)`, which introduces an
-  alias for a term. `<name>` must not be in the signature of the original problem.
+  * **Term definition** (`(deft <name> <term>)`), which introduces an
+    alias for a term. `<name>` must not be in the signature of the original problem.
 
-  Logically speaking, after `(deft c t)`, `c` and `t` are syntactically the
-  same. `c` has no real existence, it is only a shortcut, so a proof
-  of `(cl (+ (= c t)))` can be simply `(refl t)` (or `(refl c)`).
+    Logically speaking, after `(deft c t)`, `c` and `t` are syntactically the
+    same. `c` has no real existence, it is only a shortcut, so a proof
+    of `(cl (+ (= c t)))` can be simply `(refl t)` (or `(refl c)`).
+
+  * **Reasoning step** (`(stepc <name> <clause> <proof>)`):
+    `(stepc name clause proof)` (where `name` must be fresh: be defined nowhere else)
+    introduces `name` as a shortcut for `proof` in the following steps.
+
+    The result of `proof` must be exactly `clause`, otherwise the step fails.
+    This means we can start _using_ `(ref name)` in the following steps
+    before we validate `proof`, since we know the result ahead. In a
+    high-performance proof checker this is a good opportunity for parallelisation,
+    where `proof` can be checked in parallel with other steps that make use of its
+    result.
 
 - The result of `(steps (A1 … Am) (S1 … Sn))`, where the last step
-  `Sn` has as conclusion a clause `C`, is the clause made of the
-  literals of `C` and `¬A1`, …, `¬Am`.
+  `Sn` has as conclusion a clause `C` with literals `(cl l1 … ln)`,
+  is the clause `(cl l1 … ln ¬A1 … ¬Am)`.
 
   In particular, if `Sn` proves the empty clause, then `(steps …)` proves
-  that at least one assumption must be false.
+  that at least one assumption must be false. If both `Sn`'s conclusion
+  and the list of assumptions are empty, then
+  the result is the empty clause.
+
+- The list of assumptions can be useful either for subproofs,
+  or to produce a proof of unsatisfiability for
+  the SMTLIB v2.6 statement `(check-sat-assuming (<lit>+))`.
 
 
 ## Box
 
-## Mandatory axioms
+Box is a term constructor that allows abstracting a clause into an opaque
+constant term. This way, a whole clause can become a literal in another clause
+without having to deal with true nested clauses;
+see [the section on terms](./terms.md) for more details.
 
-These axioms must be supported by all checkers.
+First, a few remarks.
 
-- **\\( \beta \\)-reduction**: TODO
-- **\\( \eta \\)-expansion**: TODO
+- `(box C)` and `(box D)` are syntactically the same term if and only if (iff)
+  `C` and `D` are the same clause, modulo renaming of free variables
+  and reordering of literals.
+- `(box C)` is opaque and will not be traversed by congruence closure.
 
+That said, we have a few rules to deal with boxes:
+
+- **box-assume** (`(box-assume <clause>)`):
+  `(box-assume c)`, where `c` is `(cl l1 l2 … ln)`,
+  proves the tautology `(cl (- (box c)) l1 l2 … ln)`.
+
+  If one erases box (which is, semantically, transparent), this corresponds to
+  the tautology \\( \lnot (\forall \vec{x} C) \lor \forall \vec{x} C \\)
+  where \\( \vec{x} \\) is the set of free variables in \\( C \\).
+
+  The use-case for this rule is that we can assume `C` freely and use it
+  in the rest of the proof, _provided_ we keep an assumption `(box C)` around
+  in a negative literal. Once we actually prove `C` we can discharge `(box C)`.
+
+- **box-proof** (`(box-proof <proof>)`):
+  given a proof `p` with conclusion `C`, this returns a proof
+  whose conclusion is `(box C)`. Semantically it does nothing.
+
+An interesting possibility offered by `box` is simplifications in a tactic framework.
+A simplification rule might take a _goal_ clause `A`, and simplify it
+into a goal clause `B`. To justify this, the theorem prover might produce
+a proof `(cl (- (box B)) l1 … ln)` (assuming `A` is `(cl l1 … ln)`)
+which means \\( B \Rightarrow A \\). 
+It might do that by starting with `(box-assume B)` and applying the rewrite
+steps backward to get back to the literals of `A`.
+
+Once the goal `B` is proved, we obtain a proof of `B` which we can lift
+to a proof of `(cl (+ (box B)))` using `box-lift`; then we only have to do unit-resolution
+on `(cl (+ (box B)))` and `(cl (- (box B)) l1 … ln)` to
+obtain `(cl l1 … ln)`, ie. was the original goal `A`.
+
+Another possibility is to box a full clause, and use it as an assumption
+in a sub-proof `steps`. Then `box-assume` is required to make use of the assumption.
+
+
+
+[AVATAR]: https://link.springer.com/chapter/10.1007/978-3-319-08867-9_46

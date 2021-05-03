@@ -2,7 +2,7 @@
 
 - [Introduction](./intro.md)
   * [Design](./intro/design.md)
-  * [Example](./intro/example.md)
+  * [First example](./intro/example.md)
   * [For the Theorem Prover](./intro/for-atp.md)
   * [For the Proof Checker](./intro/for-proof-checkers.md)
 - [Reference](./reference.md)
@@ -11,5 +11,6 @@
   * [Clauses](./reference/clauses.md)
   * [Proof Rules](./reference/rules.md)
   * [Full example](./reference/example.md)
+  * [More on boxing](./reference/more-boxing.md)
 - [S-expression Format]()
 - [Binary Format]()
