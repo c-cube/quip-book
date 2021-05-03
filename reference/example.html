@@ -98,7 +98,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> Example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li><li class="chapter-item expanded "><a href="../reference/example.html" class="active"><strong aria-hidden="true">2.5.</strong> Full example</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../intro/design.html"><strong aria-hidden="true">1.1.</strong> Design</a></li><li class="chapter-item expanded "><a href="../intro/example.html"><strong aria-hidden="true">1.2.</strong> First example</a></li><li class="chapter-item expanded "><a href="../intro/for-atp.html"><strong aria-hidden="true">1.3.</strong> For the Theorem Prover</a></li><li class="chapter-item expanded "><a href="../intro/for-proof-checkers.html"><strong aria-hidden="true">1.4.</strong> For the Proof Checker</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">2.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/terms.html"><strong aria-hidden="true">2.1.</strong> Terms</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> Substitutions</div></li><li class="chapter-item expanded "><a href="../reference/clauses.html"><strong aria-hidden="true">2.3.</strong> Clauses</a></li><li class="chapter-item expanded "><a href="../reference/rules.html"><strong aria-hidden="true">2.4.</strong> Proof Rules</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/rules-atomic.html"><strong aria-hidden="true">2.4.1.</strong> Atomic rules</a></li><li class="chapter-item expanded "><a href="../reference/rules-composite.html"><strong aria-hidden="true">2.4.2.</strong> Composite rule</a></li><li class="chapter-item expanded "><a href="../reference/rules-box.html"><strong aria-hidden="true">2.4.3.</strong> Box rules</a></li></ol></li><li class="chapter-item expanded "><a href="../reference/example.html" class="active"><strong aria-hidden="true">2.5.</strong> Full example</a></li><li class="chapter-item expanded "><a href="../reference/more-boxing.html"><strong aria-hidden="true">2.6.</strong> More on boxing</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> S-expression Format</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Binary Format</div></li><li class="chapter-item expanded "><a href="../tools.html"><strong aria-hidden="true">5.</strong> Tools</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -173,7 +173,9 @@ of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
 <pre><code class="language-smt2">(quip 1
  (steps ()
 </code></pre>
-<p>followed by a bundle of term definitions for better sharing:</p>
+<p>followed by a bundle of term definitions for better sharing
+(note that the <code>_tseitin_xxx</code> symbols are actually introduced by Sidekick
+during clausification; they're not just proof printing artefacts):</p>
 <pre><code class="language-smt2">  ((deft $t1 (= x0 y0))
    (deft $t2 (= y0 x1))
    (deft $t3 (and $t1 $t2))
@@ -188,7 +190,6 @@ of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
    (deft $t9 (not $t8))
    (deft $t10 (and $t7 $t9))
    (deft _tseitin_and_3 (and $t7 $t9))
-   (stepc c0 (cl (- $t1) (- $t2) (+ $t8))
 </code></pre>
 <p>and then the actual proof:</p>
 <pre><code class="language-smt2">   (stepc c0 (cl (- $t1) (- $t2) (+ $t8))
@@ -232,22 +233,100 @@ of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
     (hres (init (ref c0)) (r1 (ref c16))
      (r1 (ref c14)) (r1 (ref c3)))))))
 </code></pre>
-<p>Note that the last step returns the empty clause:</p>
+<p>Note that the last step returns the empty clause, which means we did prove
+the problem to be unsatisfiable:</p>
 <pre><code class="language-smt2">   (stepc c17 (cl )
     (hres (init (ref c0)) (r1 (ref c16))
      (r1 (ref c14)) (r1 (ref c3)))))))
 </code></pre>
+<p>Let's examine a few steps.</p>
+<ul>
+<li>
+<p><code>c0</code>:</p>
+<pre><code>(stepc c0 (cl (- $t1) (- $t2) (+ $t8))
+  (cc-lemma (cl (- $t1) (- $t2) (+ $t8))))
+</code></pre>
+<p>which means that \( x0 = y0, y0 = x1 \vdash x0 = x1 \) is a tautology
+of the theory of equality. Indeed it is, it's the transitivity axiom.</p>
+</li>
+<li>
+<p><code>c3</code>:</p>
+<pre><code>(stepc c3 (cl (- $t8)) (hres (init (ref c1)) (r1 (ref c2))))
+</code></pre>
+<p>Here, we have:</p>
+<ul>
+<li><code>c1</code> is <code>(cl (- _tseitin_and_3) (- (= x0 x1))</code></li>
+<li><code>c2</code> is <code>(cl (+ _tseitin_and_3))</code></li>
+<li>so, by resolution of <code>c1</code> and <code>c2</code>
+(note the use of &quot;r1&quot; since <code>c2</code> is unit: we do
+not need to specify a pivot) we obtain <code>(cl (- (= x0 x1)))</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>c4</code>:</p>
+<pre><code>(stepc c4 (cl (- _tseitin_and_0) (+ $t2))
+ (bool-c (cl (+ $t2) (- _tseitin_and_0))))
+</code></pre>
+<p>where <code>_tseitin_and_0</code> is actually a name for <code>(and $t1 $t2)</code>.</p>
+<p>The <code>bool-c</code> rule is valid since <code>(cl (+ $t2) (- (and $t1 $t2)))</code>
+is one of the basic tautology on the <code>and</code> boolean connective.</p>
+</li>
+<li>
+<p><code>c10</code>:</p>
+<pre><code>(stepc c10 (cl (- _tseitin_and_1))
+ (hres (init (ref c7)) (r (pivot $t5) (ref c9))
+   (r (pivot $t4) (ref c8))))
+</code></pre>
+<p>We have:</p>
+<ul>
+<li><code>c7</code> is <code>(cl (- $t5) (- $t4))</code></li>
+<li><code>c9</code> is <code>(cl (- _tseitin_and_1) (+ $t5))</code></li>
+<li><code>c8</code> is <code>(cl (- _tseitin_and_1) (+ $t4))</code></li>
+</ul>
+<p>And the hyper-resolution steps therefore go:</p>
+<table><thead><tr><th>clause</th><th>step</th></tr></thead><tbody>
+<tr><td><code>(cl (- $t5) (- $t4))</code></td><td>start with <code>c7</code></td></tr>
+<tr><td><code>(cl (- $t4) (- _tseitin_and_1))</code></td><td>resolve with <code>c9</code> on <code>$t5</code></td></tr>
+<tr><td><code>(cl (- _tseitin_and_1))</code></td><td>resolve with <code>c8</code> on <code>$t4</code></td></tr>
+</tbody></table>
+</li>
+<li>
+<p><code>c17</code>:</p>
+<pre><code>(stepc c17 (cl)
+ (hres (init (ref c0)) (r1 (ref c16))
+  (r1 (ref c14)) (r1 (ref c3)))))))
+</code></pre>
+<p>We prove the empty clause! Here we have:</p>
+<ul>
+<li><code>c0</code> is <code>(cl (- $t1) (- $t2) (+ $t8))</code></li>
+<li><code>c16</code> is <code>(cl (+ $t1))</code></li>
+<li><code>c14</code> is <code>(cl (+ $t2))</code></li>
+<li><code>c3</code> is <code>(cl (- $t8))</code></li>
+</ul>
+<p>So by starting with <code>c0</code> and performing unit resolution steps we get:</p>
+<table><thead><tr><th>clause</th><th>step</th></tr></thead><tbody>
+<tr><td><code>(cl (- $t1) (- $t2) (+ $t8))</code></td><td>start with <code>c0</code></td></tr>
+<tr><td><code>(cl (- $t2) (+ $t8))</code></td><td>unit-resolve with <code>c16</code></td></tr>
+<tr><td><code>(cl (+ $t8))</code></td><td>unit-resolve with <code>c14</code></td></tr>
+<tr><td><code>(cl )</code></td><td>unit-resolve with <code>c3</code></td></tr>
+</tbody></table>
+</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../reference/rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../reference/rules-box.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
+                        
+                            <a rel="next" href="../reference/more-boxing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -257,11 +336,15 @@ of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../reference/rules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../reference/rules-box.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
+                
+                    <a rel="next" href="../reference/more-boxing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 
             </nav>
 
