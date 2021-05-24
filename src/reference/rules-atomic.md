@@ -1,7 +1,8 @@
 # Atomic rules
 
 - **ref** (`(ref <name>)`): returns a proof previously defined using `stepc`
-  (see [composite proofs](#composite-proofs) below).
+  (see [composite proofs](#composite-proofs) below) or a unit clause
+  corresponding to a local assumption of `steps`.
   There is no need to re-prove anything, we assume the step was valid and
   just reuse its conclusion.
 
@@ -11,7 +12,8 @@
 - **refl** (`(refl <term>)`): `(refl t)` is a proof of the
   clause `(cl (+ (= t t)))`.
 
-- **assert** (`(assert <clause>)`): proves a clause, but only if it matches exactly
+- **assert** (`(assert <term>)`): proves a unit clause `(cl (+ t))` (if
+  the term is `t`), but only if it matches exactly
   an assertion/hypothesis of the original problem.
 
   (TODO: be able to refer to the original formula by file+name if it was provided)
