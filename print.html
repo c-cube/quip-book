@@ -141,13 +141,15 @@
                         </a>
                         
                         
+                        
+
                     </div>
                 </div>
 
                 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -181,7 +183,7 @@ that might <em>produce</em> Quip proofs;</li>
 <p><strong>NOTE</strong>: the proof format is experimental and its design will most likely
 fluctuate a lot for a while as checkers and proof-producing provers are
 developed.</p>
-<h2 id="overall-design"><a class="header" href="#overall-design">Overall design</a></h2>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h2 id="overall-design"><a class="header" href="#overall-design">Overall design</a></h2>
 <p>A Quip proof is organized around a few main notions: <em>terms</em>, <em>substitutions</em>,
 <em>clauses</em>, and <em>proof steps</em>.</p>
 <ul>
@@ -238,7 +240,7 @@ we get more concise proofs that are also easier to produce from theorem provers.
 <p>Clauses can alternatively be seen as classical sequents, with negative elements
 on the left of \( \vdash \), and positive elements on the right of it.</p>
 </div>
-<h1 id="example"><a class="header" href="#example">Example</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="example"><a class="header" href="#example">Example</a></h1>
 <p>This is a very simple SMT problem in the category <code>QF_UF</code>, representing
 the problem \( a=b \land f~a = c \vdash f~b = c \) by trying to contradict it:</p>
 <pre><code class="language-smtlib2">(set-logic QF_UF)
@@ -340,7 +342,7 @@ and sidekick did not shorten the proof accordingly into
 <p>or partially incorrect, depending on your point of view. Glass half-full
 and all that.</p>
 </div>
-<h2 id="quip-for-the-automatic-theorem-prover"><a class="header" href="#quip-for-the-automatic-theorem-prover">Quip for the Automatic Theorem Prover</a></h2>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h2 id="quip-for-the-automatic-theorem-prover"><a class="header" href="#quip-for-the-automatic-theorem-prover">Quip for the Automatic Theorem Prover</a></h2>
 <p>Quip is biased towards being easy to <em>produce</em> from theorem provers and SMT
 solvers, while remaining reasonably efficient to check.</p>
 <p>The easiness comes from several aspects:</p>
@@ -365,7 +367,7 @@ composition of several steps. This way it's not necessary to name each single
 clause occurring in the proof.</p>
 </li>
 </ul>
-<h1 id="quip-for-the-proof-checker"><a class="header" href="#quip-for-the-proof-checker">Quip for the Proof Checker</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="quip-for-the-proof-checker"><a class="header" href="#quip-for-the-proof-checker">Quip for the Proof Checker</a></h1>
 <p>Quip's design favors the production of proofs, not their checking. However,
 proof checking should still be implementable in an efficient way.</p>
 <p>A proof checker must implement a few core algorithms to be able to verify proofs
@@ -401,13 +403,13 @@ Given a substitution \( \sigma \triangleq \{ x_1 \mapsto t_1, \ldots, x_n \mapst
 can deduce \( C\sigma \).</p>
 </li>
 </ul>
-<h1 id="reference"><a class="header" href="#reference">Reference</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="reference"><a class="header" href="#reference">Reference</a></h1>
 <p>This chapter contains<sup class="footnote-reference"><a href="#1">1</a></sup> a detailed specification of the proof language constructs.
 For the concrete file formats, see <a href="">the S-expr format</a> and <a href="">Binary format</a> chapters.</p>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
 <p>will eventually contain. 😇</p>
 </div>
-<h1 id="terms"><a class="header" href="#terms">Terms</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="terms"><a class="header" href="#terms">Terms</a></h1>
 <p>Terms belong to higher-order logic, with prenex polymorphism. In general
 we denote terms as \( t \) or \( u \) (with indices if needed).</p>
 <p>(TODO: provide some citations)</p>
@@ -461,24 +463,25 @@ the simplest way to do so is: <code>(cl (cl l_1 … l_n (- (box B))))</code>.</p
 <p>See <a href="reference/./rules.html#box">the rules about box</a>.</p>
 </li>
 </ul>
-<h1 id="clauses"><a class="header" href="#clauses">Clauses</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="clauses"><a class="header" href="#clauses">Clauses</a></h1>
 <p>We denote clauses as <code>(cl &lt;lit&gt;*)</code>. The empty clause is therefore <code>(cl)</code>.
 Each literal is <code>(&lt;sign&gt; &lt;term&gt;)</code> with the sign being either <code>+</code> or <code>-</code>
 (for a clause-level negation).</p>
 <p>For example, <code>(cl (- true) (+ (= b b)))</code> represents the clause
 \( \lnot \top \lor b=b \), or the sequent \( \top \vdash b=b \).</p>
-<h1 id="proof-rules"><a class="header" href="#proof-rules">Proof Rules</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="proof-rules"><a class="header" href="#proof-rules">Proof Rules</a></h1>
 <p>Rules form an expression language designed to only return valid clause
 (i.e. theorems, or assumptions of the problem). Most rules are of the atomic kind
 (they take arguments but look like a function application);
 the main <a href="reference/./rules-composite.html">structuring rule</a> permits the definition
 of named intermediate steps. This is also necessary to introduce sharing in a proof,
 where some clause might be proved once but used many times.</p>
-<h1 id="atomic-rules"><a class="header" href="#atomic-rules">Atomic rules</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="atomic-rules"><a class="header" href="#atomic-rules">Atomic rules</a></h1>
 <ul>
 <li>
 <p><strong>ref</strong> (<code>(ref &lt;name&gt;)</code>): returns a proof previously defined using <code>stepc</code>
-(see <a href="reference/rules-atomic.html#composite-proofs">composite proofs</a> below).
+(see <a href="reference/rules-atomic.html#composite-proofs">composite proofs</a> below) or a unit clause
+corresponding to a local assumption of <code>steps</code>.
 There is no need to re-prove anything, we assume the step was valid and
 just reuse its conclusion.</p>
 <p>In other words, <code>(ref c5)</code> coming after <code>(defc c5 (cl (+ p) (+ q)) &lt;proof&gt;)</code>
@@ -489,7 +492,8 @@ is a trivial proof of the clause <code>(cl (+ p) (+ q))</code>.</p>
 clause <code>(cl (+ (= t t)))</code>.</p>
 </li>
 <li>
-<p><strong>assert</strong> (<code>(assert &lt;clause&gt;)</code>): proves a clause, but only if it matches exactly
+<p><strong>assert</strong> (<code>(assert &lt;term&gt;)</code>): proves a unit clause <code>(cl (+ t))</code> (if
+the term is <code>t</code>), but only if it matches exactly
 an assertion/hypothesis of the original problem.</p>
 <p>(TODO: be able to refer to the original formula by file+name if it was provided)</p>
 </li>
@@ -671,7 +675,7 @@ in <code>body</code> in a capture avoiding way.</p>
   -->
 <p>TODO: instantiation</p>
 <p>TODO: reasoning under quantifiers</p>
-<h1 id="composite-rule"><a class="header" href="#composite-rule">Composite rule</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="composite-rule"><a class="header" href="#composite-rule">Composite rule</a></h1>
 <p>The main structuring construct for proofs is <code>steps</code>. Its structure is
 <code>(steps (&lt;assumption&gt;*) (&lt;step&gt;+))</code>.</p>
 <ul>
@@ -719,7 +723,7 @@ or to produce a proof of unsatisfiability for
 the SMTLIB v2.6 statement <code>(check-sat-assuming (&lt;lit&gt;+))</code>.</p>
 </li>
 </ul>
-<h1 id="box-rules"><a class="header" href="#box-rules">Box rules</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="box-rules"><a class="header" href="#box-rules">Box rules</a></h1>
 <p>Box is a term constructor that allows abstracting a clause into an opaque
 constant term. This way, a whole clause can become a literal in another clause
 without having to deal with true nested clauses;
@@ -763,7 +767,7 @@ on <code>(cl (+ (box B)))</code> and <code>(cl (- (box B)) l1 … ln)</code> to
 obtain <code>(cl l1 … ln)</code>, ie. was the original goal <code>A</code>.</p>
 <p>Another possibility is to box a full clause, and use it as an assumption
 in a sub-proof <code>steps</code>. Then <code>box-assume</code> is required to make use of the assumption.</p>
-<h1 id="full-example"><a class="header" href="#full-example">Full example</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="full-example"><a class="header" href="#full-example">Full example</a></h1>
 <p>We're going to explore a bigger example: the proof of unsatisfiability
 of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>
 <p>It starts normally:</p>
@@ -909,7 +913,7 @@ is one of the basic tautology on the <code>and</code> boolean connective.</p>
 </tbody></table>
 </li>
 </ul>
-<h1 id="more-on-boxing"><a class="header" href="#more-on-boxing">More on boxing</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="more-on-boxing"><a class="header" href="#more-on-boxing">More on boxing</a></h1>
 <p>If two clauses <code>C</code> and <code>D</code> are known to be equivalent, but are not syntactically the same,
 one can prove <code>(cl (- (box C)) (+ (box D)))</code> (and conversely) as follows.</p>
 <p>Let's assume <code>C</code> is <code>(cl (+ a) (+ b))</code>, <code>D</code> is <code>(cl (+ a2) (+ b2))</code>,
@@ -942,7 +946,7 @@ is thus <code>(cl (- (box C)) (+ (box D)))</code>.</p>
 <p>We used the assumption mechanism to get rid of <code>(- (box C))</code> locally
 to avoiding boxing it along with the other literals
 when we apply <code>box-proof</code>.</p>
-<h1 id="tools"><a class="header" href="#tools">Tools</a></h1>
+<div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="tools"><a class="header" href="#tools">Tools</a></h1>
 <p>Here is a list of tools that can produce or consume Quip proofs.</p>
 <h2 id="proof-producing-provers-and-smt-solvers"><a class="header" href="#proof-producing-provers-and-smt-solvers">Proof-producing provers and SMT solvers</a></h2>
 <ul>

@@ -139,13 +139,15 @@
                         </a>
                         
                         
+                        
+
                     </div>
                 </div>
 
                 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -170,7 +172,8 @@
 <ul>
 <li>
 <p><strong>ref</strong> (<code>(ref &lt;name&gt;)</code>): returns a proof previously defined using <code>stepc</code>
-(see <a href="#composite-proofs">composite proofs</a> below).
+(see <a href="#composite-proofs">composite proofs</a> below) or a unit clause
+corresponding to a local assumption of <code>steps</code>.
 There is no need to re-prove anything, we assume the step was valid and
 just reuse its conclusion.</p>
 <p>In other words, <code>(ref c5)</code> coming after <code>(defc c5 (cl (+ p) (+ q)) &lt;proof&gt;)</code>
@@ -181,7 +184,8 @@ is a trivial proof of the clause <code>(cl (+ p) (+ q))</code>.</p>
 clause <code>(cl (+ (= t t)))</code>.</p>
 </li>
 <li>
-<p><strong>assert</strong> (<code>(assert &lt;clause&gt;)</code>): proves a clause, but only if it matches exactly
+<p><strong>assert</strong> (<code>(assert &lt;term&gt;)</code>): proves a unit clause <code>(cl (+ t))</code> (if
+the term is <code>t</code>), but only if it matches exactly
 an assertion/hypothesis of the original problem.</p>
 <p>(TODO: be able to refer to the original formula by file+name if it was provided)</p>
 </li>
