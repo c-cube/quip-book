@@ -11,6 +11,6 @@ There are two sides to this documentation:
 - the point of view of proof checkers that aim at validating such proofs.
 
 **NOTE**: the proof format is experimental and its design will most likely
-fluctuate a lot for a while as checkers and proof-producing provers are
+fluctuate a lot for a while, as checkers and proof-producing provers are
 developed.
 
