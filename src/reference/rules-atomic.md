@@ -119,34 +119,39 @@
         (r1 (ref c_n))))))
   ```
 
-- **bool-c** (`(bool-c <clause>)`): `(bool-c c)` proves the clause `C` if
-  it is a boolean tautology of depth 1. In other words, it corresponds to one
-  construction or destruction axioms for the boolean connective
-  `and`, `or`, `=>`, boolean `=`, `xor`, `not`.
+- **bool-c** (`(bool-c <name> <clause>)`): `(bool-c <name> c)`
+  proves the clause `C` if it is a boolean tautology of depth 1 using the
+  particular sub-rule named `<name>`.
+  In other words, it corresponds to one construction or destruction axioms for
+  the boolean connective `and`, `or`, `=>`, boolean `=`, `xor`, `not`.
+
+  Note that a rule name can still cover several possible axioms. For example
+  `and-e` (for "and elim") covers all the `(cl (- (and t1 … tn)) (+ t_i))`
+  for `i ∈ {1…n}`.
 
   The possible axioms, in their binary version, are:
 
-  | connective | n-ary | axiom |
-  |--------|-----|--|
-  |  `and` |  yes | `(cl (- A) (- B) (+ (and A B)))` |
-  |  `and` |  yes | `(cl (- (and A B)) (+ A))` |
-  |  `and` |  yes | `(cl (- (and A B)) (+ B))` |
-  |  `or` |  yes | `(cl (- (or A B)) (+ A) (+ B))` |
-  |  `or` |  yes | `(cl (- A) (+ (or A B)))` |
-  |  `or` |  yes | `(cl (- B) (+ (or A B)))` |
-  |  `=>` |  yes | `(cl (- (=> A B)) (- A) (+ B))` |
-  |  `=>` |  yes | `(cl (+ A) (+ (=> A B)))` |
-  |  `=>` |  yes | `(cl (- B) (+ (=> A B)))` |
-  | `not` | no | `(cl (- (not A)) (+ A))` |
-  | `not` | no | `(cl (- A) (+ (not A))` |
-  |  `=` |  no | `(cl (- (= A B)) (- A) (+ B))` |
-  |  `=` |  no | `(cl (- (= A B)) (- B) (+ A))` |
-  |  `=` |  no | `(cl (+ A) (+ B) (+ (= A B)))` |
-  |  `=` |  no | `(cl (- A) (- B) (+ (= A B)))` |
-  |  `xor` |  no | `(cl (- (xor A B)) (- A) (- B))` |
-  |  `xor` |  no | `(cl (- (xor A B)) (+ A) (+ B))` |
-  |  `xor` |  no | `(cl (+ A) (- B) (+ (xor A B)))` |
-  |  `xor` |  no | `(cl (- A) (+ B) (+ (xor A B)))` |
+  | name | connective | n-ary | axiom |
+  |------|--------|-----|--|
+  | and-i | `and` |  yes | `(cl (- A) (- B) (+ (and A B)))` |
+  | and-e | `and` |  yes | `(cl (- (and A B)) (+ A))` |
+  | and-e | `and` |  yes | `(cl (- (and A B)) (+ B))` |
+  | or-e | `or` |  yes | `(cl (- (or A B)) (+ A) (+ B))` |
+  | or-i | `or` |  yes | `(cl (- A) (+ (or A B)))` |
+  | or-i | `or` |  yes | `(cl (- B) (+ (or A B)))` |
+  | imp-e | `=>` |  yes | `(cl (- (=> A B)) (- A) (+ B))` |
+  | imp-i | `=>` |  yes | `(cl (+ A) (+ (=> A B)))` |
+  | imp-i | `=>` |  yes | `(cl (- B) (+ (=> A B)))` |
+  | not-e | `not` | no | `(cl (- (not A)) (+ A))` |
+  | not-i | `not` | no | `(cl (- A) (+ (not A))` |
+  | eq-e | `=` |  no | `(cl (- (= A B)) (- A) (+ B))` |
+  | eq-e | `=` |  no | `(cl (- (= A B)) (- B) (+ A))` |
+  | eq-i | `=` |  no | `(cl (+ A) (+ B) (+ (= A B)))` |
+  | eq-i | `=` |  no | `(cl (- A) (- B) (+ (= A B)))` |
+  | xor-e | `xor` |  no | `(cl (- (xor A B)) (- A) (- B))` |
+  | xor-e | `xor` |  no | `(cl (- (xor A B)) (+ A) (+ B))` |
+  | xor-i | `xor` |  no | `(cl (+ A) (- B) (+ (xor A B)))` |
+  | xor-i | `xor` |  no | `(cl (- A) (+ B) (+ (xor A B)))` |
 
   And an example of a n-ary axiom could be:
 
