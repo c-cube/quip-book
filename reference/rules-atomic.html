@@ -288,45 +288,38 @@ could be expanded (using fresh names for steps) to:</p>
 </code></pre>
 </li>
 <li>
-<p><strong>bool-c</strong> (<code>(bool-c &lt;name&gt; &lt;clause&gt;)</code>): <code>(bool-c &lt;name&gt; c)</code>
-proves the clause <code>C</code> if it is a boolean tautology of depth 1 using the
-particular sub-rule named <code>&lt;name&gt;</code>.
+<p><strong>bool-c</strong> (<code>(bool-c &lt;name&gt; &lt;term&gt;+)</code>): <code>(bool-c &lt;name&gt; &lt;terms&gt;)</code>
+proves a boolean tautology of depth 1 using the
+particular sub-rule named <code>&lt;name&gt;</code> with some term argument(s).
 In other words, it corresponds to one construction or destruction axioms for
 the boolean connective <code>and</code>, <code>or</code>, <code>=&gt;</code>, boolean <code>=</code>, <code>xor</code>, <code>not</code>.</p>
-<p>Note that a rule name can still cover several possible axioms. For example
-<code>and-e</code> (for &quot;and elim&quot;) covers all the <code>(cl (- (and t1 … tn)) (+ t_i))</code>
-for <code>i ∈ {1…n}</code>.</p>
-<p>The possible axioms, in their binary version, are:</p>
-<table><thead><tr><th>name</th><th>connective</th><th>n-ary</th><th>axiom</th></tr></thead><tbody>
-<tr><td>and-i</td><td><code>and</code></td><td>yes</td><td><code>(cl (- A) (- B) (+ (and A B)))</code></td></tr>
-<tr><td>and-e</td><td><code>and</code></td><td>yes</td><td><code>(cl (- (and A B)) (+ A))</code></td></tr>
-<tr><td>and-e</td><td><code>and</code></td><td>yes</td><td><code>(cl (- (and A B)) (+ B))</code></td></tr>
-<tr><td>or-e</td><td><code>or</code></td><td>yes</td><td><code>(cl (- (or A B)) (+ A) (+ B))</code></td></tr>
-<tr><td>or-i</td><td><code>or</code></td><td>yes</td><td><code>(cl (- A) (+ (or A B)))</code></td></tr>
-<tr><td>or-i</td><td><code>or</code></td><td>yes</td><td><code>(cl (- B) (+ (or A B)))</code></td></tr>
-<tr><td>imp-e</td><td><code>=&gt;</code></td><td>yes</td><td><code>(cl (- (=&gt; A B)) (- A) (+ B))</code></td></tr>
-<tr><td>imp-i</td><td><code>=&gt;</code></td><td>yes</td><td><code>(cl (+ A) (+ (=&gt; A B)))</code></td></tr>
-<tr><td>imp-i</td><td><code>=&gt;</code></td><td>yes</td><td><code>(cl (- B) (+ (=&gt; A B)))</code></td></tr>
-<tr><td>not-e</td><td><code>not</code></td><td>no</td><td><code>(cl (- (not A)) (+ A))</code></td></tr>
-<tr><td>not-i</td><td><code>not</code></td><td>no</td><td><code>(cl (- A) (+ (not A))</code></td></tr>
-<tr><td>eq-e</td><td><code>=</code></td><td>no</td><td><code>(cl (- (= A B)) (- A) (+ B))</code></td></tr>
-<tr><td>eq-e</td><td><code>=</code></td><td>no</td><td><code>(cl (- (= A B)) (- B) (+ A))</code></td></tr>
-<tr><td>eq-i</td><td><code>=</code></td><td>no</td><td><code>(cl (+ A) (+ B) (+ (= A B)))</code></td></tr>
-<tr><td>eq-i</td><td><code>=</code></td><td>no</td><td><code>(cl (- A) (- B) (+ (= A B)))</code></td></tr>
-<tr><td>xor-e</td><td><code>xor</code></td><td>no</td><td><code>(cl (- (xor A B)) (- A) (- B))</code></td></tr>
-<tr><td>xor-e</td><td><code>xor</code></td><td>no</td><td><code>(cl (- (xor A B)) (+ A) (+ B))</code></td></tr>
-<tr><td>xor-i</td><td><code>xor</code></td><td>no</td><td><code>(cl (+ A) (- B) (+ (xor A B)))</code></td></tr>
-<tr><td>xor-i</td><td><code>xor</code></td><td>no</td><td><code>(cl (- A) (+ B) (+ (xor A B)))</code></td></tr>
+<p>The possible axioms are:</p>
+<table><thead><tr><th>rule</th><th>axiom</th></tr></thead><tbody>
+<tr><td><code>(and-i (and A1…An))</code></td><td><code>(cl (- A1) … (- An) (+ (and A1…An)))</code></td></tr>
+<tr><td><code>(and-e (and A1…An) Ai)</code></td><td><code>(cl (- (and A1…An)) (+ Ai))</code></td></tr>
+<tr><td><code>(or-e (or A1…An))</code></td><td><code>(cl (- (or A1…An)) (+ A1) … (+ An))</code></td></tr>
+<tr><td><code>(or-i (or A1…An) Ai)</code></td><td><code>(cl (- Ai) (+ (or A1…An)))</code></td></tr>
+<tr><td><code>(imp-e (=&gt; A1…An B))</code></td><td><code>(cl (- (=&gt; A1…An B)) (- A1)…(- An) (+ B))</code></td></tr>
+<tr><td><code>(imp-i (=&gt; A1…An B) Ai)</code></td><td><code>(cl (+ Ai) (+ (=&gt; A1…An B)))</code></td></tr>
+<tr><td><code>(imp-i (=&gt; A1…An B) B)</code></td><td><code>(cl (- B) (+ (=&gt; A1…An B)))</code></td></tr>
+<tr><td><code>(not-e (not A))</code></td><td><code>(cl (- (not A)) (+ A))</code></td></tr>
+<tr><td><code>(not-i (not A))</code></td><td><code>(cl (- A) (+ (not A))</code></td></tr>
+<tr><td><code>(eq-e (= A B) A)</code></td><td><code>(cl (- (= A B)) (- A) (+ B))</code></td></tr>
+<tr><td><code>(eq-e (= A B) B)</code></td><td><code>(cl (- (= A B)) (- B) (+ A))</code></td></tr>
+<tr><td><code>(eq-i+ (= A B))</code></td><td><code>(cl (+ A) (+ B) (+ (= A B)))</code></td></tr>
+<tr><td><code>(eq-i- (= A B))</code></td><td><code>(cl (- A) (- B) (+ (= A B)))</code></td></tr>
+<tr><td><code>(xor-e- (xor A B))</code></td><td><code>(cl (- (xor A B)) (- A) (- B))</code></td></tr>
+<tr><td><code>(xor-e+ (xor A B))</code></td><td><code>(cl (- (xor A B)) (+ A) (+ B))</code></td></tr>
+<tr><td><code>(xor-i (xor A B) B)</code></td><td><code>(cl (+ A) (- B) (+ (xor A B)))</code></td></tr>
+<tr><td><code>(xor-i (xor A B) A)</code></td><td><code>(cl (- A) (+ B) (+ (xor A B)))</code></td></tr>
 </tbody></table>
-<p>And an example of a n-ary axiom could be:</p>
-<pre><code>(cl (- A1) (- A2) … (- An) (+ (and A1 A2 … An)))
-</code></pre>
 </li>
 <li>
 <p><strong>bool-eq</strong> (<code>(bool-eq &lt;term&gt; &lt;term&gt;)</code>): <code>(bool-eq t u)</code> proves
 the clause <code>(cl (+ (= t u)))</code> (where <code>t</code> and <code>u</code> are both boolean terms)
 if <code>t</code> simplifies to <code>u</code> via a basic simplification step.</p>
 <p>This rule corresponds to the axioms:</p>
+<p><strong>TODO</strong>: also give names to sub-rules here</p>
 <table><thead><tr><th>axiom</th></tr></thead><tbody>
 <tr><td><code>(= (not true) false)</code></td></tr>
 <tr><td><code>(= (not false) true)</code></td></tr>
