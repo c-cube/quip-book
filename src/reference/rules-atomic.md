@@ -119,51 +119,41 @@
         (r1 (ref c_n))))))
   ```
 
-- **bool-c** (`(bool-c <name> <clause>)`): `(bool-c <name> c)`
-  proves the clause `C` if it is a boolean tautology of depth 1 using the
-  particular sub-rule named `<name>`.
+- **bool-c** (`(bool-c <name> <term>+)`): `(bool-c <name> <terms>)`
+  proves a boolean tautology of depth 1 using the
+  particular sub-rule named `<name>` with some term argument(s).
   In other words, it corresponds to one construction or destruction axioms for
   the boolean connective `and`, `or`, `=>`, boolean `=`, `xor`, `not`.
 
-  Note that a rule name can still cover several possible axioms. For example
-  `and-e` (for "and elim") covers all the `(cl (- (and t1 … tn)) (+ t_i))`
-  for `i ∈ {1…n}`.
+  The possible axioms are:
 
-  The possible axioms, in their binary version, are:
-
-  | name | connective | n-ary | axiom |
-  |------|--------|-----|--|
-  | and-i | `and` |  yes | `(cl (- A) (- B) (+ (and A B)))` |
-  | and-e | `and` |  yes | `(cl (- (and A B)) (+ A))` |
-  | and-e | `and` |  yes | `(cl (- (and A B)) (+ B))` |
-  | or-e | `or` |  yes | `(cl (- (or A B)) (+ A) (+ B))` |
-  | or-i | `or` |  yes | `(cl (- A) (+ (or A B)))` |
-  | or-i | `or` |  yes | `(cl (- B) (+ (or A B)))` |
-  | imp-e | `=>` |  yes | `(cl (- (=> A B)) (- A) (+ B))` |
-  | imp-i | `=>` |  yes | `(cl (+ A) (+ (=> A B)))` |
-  | imp-i | `=>` |  yes | `(cl (- B) (+ (=> A B)))` |
-  | not-e | `not` | no | `(cl (- (not A)) (+ A))` |
-  | not-i | `not` | no | `(cl (- A) (+ (not A))` |
-  | eq-e | `=` |  no | `(cl (- (= A B)) (- A) (+ B))` |
-  | eq-e | `=` |  no | `(cl (- (= A B)) (- B) (+ A))` |
-  | eq-i | `=` |  no | `(cl (+ A) (+ B) (+ (= A B)))` |
-  | eq-i | `=` |  no | `(cl (- A) (- B) (+ (= A B)))` |
-  | xor-e | `xor` |  no | `(cl (- (xor A B)) (- A) (- B))` |
-  | xor-e | `xor` |  no | `(cl (- (xor A B)) (+ A) (+ B))` |
-  | xor-i | `xor` |  no | `(cl (+ A) (- B) (+ (xor A B)))` |
-  | xor-i | `xor` |  no | `(cl (- A) (+ B) (+ (xor A B)))` |
-
-  And an example of a n-ary axiom could be:
-
-  ```
-  (cl (- A1) (- A2) … (- An) (+ (and A1 A2 … An)))
-  ```
+  | rule | axiom |
+  |------| --|
+  | `(and-i (and A1…An))` | `(cl (- A1) … (- An) (+ (and A1…An)))` |
+  | `(and-e (and A1…An) Ai)` | `(cl (- (and A1…An)) (+ Ai))` |
+  | `(or-e (or A1…An))` | `(cl (- (or A1…An)) (+ A1) … (+ An))` |
+  | `(or-i (or A1…An) Ai)` | `(cl (- Ai) (+ (or A1…An)))` |
+  | `(imp-e (=> A1…An B))` | `(cl (- (=> A1…An B)) (- A1)…(- An) (+ B))` |
+  | `(imp-i (=> A1…An B) Ai)` | `(cl (+ Ai) (+ (=> A1…An B)))` |
+  | `(imp-i (=> A1…An B) B)` | `(cl (- B) (+ (=> A1…An B)))` |
+  | `(not-e (not A))` | `(cl (- (not A)) (+ A))` |
+  | `(not-i (not A))` | `(cl (- A) (+ (not A))` |
+  | `(eq-e (= A B) A)` | `(cl (- (= A B)) (- A) (+ B))` |
+  | `(eq-e (= A B) B)` | `(cl (- (= A B)) (- B) (+ A))` |
+  | `(eq-i+ (= A B))` | `(cl (+ A) (+ B) (+ (= A B)))` |
+  | `(eq-i- (= A B))` | `(cl (- A) (- B) (+ (= A B)))` |
+  | `(xor-e- (xor A B))` | `(cl (- (xor A B)) (- A) (- B))` |
+  | `(xor-e+ (xor A B))` | `(cl (- (xor A B)) (+ A) (+ B))` |
+  | `(xor-i (xor A B) B)` | `(cl (+ A) (- B) (+ (xor A B)))` |
+  | `(xor-i (xor A B) A)` | `(cl (- A) (+ B) (+ (xor A B)))` |
 
 - **bool-eq** (`(bool-eq <term> <term>)`): `(bool-eq t u)` proves
   the clause `(cl (+ (= t u)))` (where `t` and `u` are both boolean terms)
   if `t` simplifies to `u` via a basic simplification step.
 
   This rule corresponds to the axioms:
+
+  **TODO**: also give names to sub-rules here
 
   | axiom |
   |-----|
