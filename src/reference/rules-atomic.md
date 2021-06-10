@@ -119,6 +119,10 @@
         (r1 (ref c_n))))))
   ```
 
+- **nn** (`(nn <proof>)`): not-normalization: a normalization step that
+  transforms some literals in a clause. It turns `(- (not a))` into `(+ a)`,
+  and `(+ (not a))` into `(- a)`.
+
 - **bool-c** (`(bool-c <name> <term>+)`): `(bool-c <name> <terms>)`
   proves a boolean tautology of depth 1 using the
   particular sub-rule named `<name>` with some term argument(s).
