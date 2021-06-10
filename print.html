@@ -596,6 +596,11 @@ could be expanded (using fresh names for steps) to:</p>
 </code></pre>
 </li>
 <li>
+<p><strong>nn</strong> (<code>(nn &lt;proof&gt;)</code>): not-normalization: a normalization step that
+transforms some literals in a clause. It turns <code>(- (not a))</code> into <code>(+ a)</code>,
+and <code>(+ (not a))</code> into <code>(- a)</code>.</p>
+</li>
+<li>
 <p><strong>bool-c</strong> (<code>(bool-c &lt;name&gt; &lt;term&gt;+)</code>): <code>(bool-c &lt;name&gt; &lt;terms&gt;)</code>
 proves a boolean tautology of depth 1 using the
 particular sub-rule named <code>&lt;name&gt;</code> with some term argument(s).
