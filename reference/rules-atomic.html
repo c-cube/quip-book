@@ -178,6 +178,7 @@ There is no need to re-prove anything, we assume the step was valid and
 just reuse its conclusion.</p>
 <p>In other words, <code>(ref c5)</code> coming after <code>(defc c5 (cl (+ p) (+ q)) &lt;proof&gt;)</code>
 is a trivial proof of the clause <code>(cl (+ p) (+ q))</code>.</p>
+<p>The serialization might use &quot;@&quot; instead of &quot;ref&quot;.</p>
 </li>
 <li>
 <p><strong>refl</strong> (<code>(refl &lt;term&gt;)</code>): <code>(refl t)</code> is a proof of the
@@ -190,7 +191,7 @@ an assertion/hypothesis of the original problem.</p>
 <p>(TODO: be able to refer to the original formula by file+name if it was provided)</p>
 </li>
 <li>
-<p><strong>hres</strong> (<code>(hres (init &lt;proof&gt;) &lt;hstep&gt;+)</code>): a fold-like operation on the
+<p><strong>hres</strong> (<code>(hres &lt;proof&gt; &lt;hstep&gt;+)</code>): a fold-like operation on the
 initial proof's result. It can represent a resolution step, or hyper-resolution,
 or some boolean paramodulation steps. As opposed to the other rules which
 are mostly useful for preprocessing/simplification of the original problem,
@@ -202,7 +203,7 @@ they are presented. Assuming the current clause is <code>C == (cl l1 … lm)</co
 each h-step can be one of the following:</p>
 <ul>
 <li>
-<p><strong>resolution</strong> (<code>(r (pivot &lt;term&gt;) &lt;proof&gt;)</code>): <code>(r (pivot t) proof)</code>
+<p><strong>resolution</strong> (<code>(r &lt;term&gt; &lt;proof&gt;)</code>): <code>(r t proof)</code>
 resolves <code>proof</code> into a clause <code>D</code> which must contain a literal
 <code>(+ t)</code> or <code>(- t)</code>. Then it performs boolean resolution between
 the current clause <code>C</code> and the clause <code>D</code> with pivot literal <code>(+ t)</code>.</p>
@@ -241,6 +242,14 @@ C' \lor D' \lor rhs
 Same as <code>p</code> but the proof must return a unit clause <code>(+ (= lhs rhs))</code>.</p>
 </li>
 </ul>
+</li>
+<li>
+<p><strong>r</strong> (<code>(r &lt;term&gt; &lt;proof&gt; &lt;proof&gt;)</code>): resolution on the given pivot
+between the two clauses.</p>
+<p>The proof term <code>(r pivot p1 p2)</code> corresponds to <code>(hres p1 (r pivot p2))</code>.</p>
+<p>The shortcut <code>(r1 &lt;proof&gt; &lt;proof&gt;)</code> allows the user to omit the
+pivot <strong>if</strong> one the the two proofs is unit (ie. has exactly one literal).</p>
+<p>The proof term <code>(r1 p1 p2)</code> corresponds to <code>(hres p1 (r1 p2))</code>.</p>
 </li>
 <li>
 <p><strong>cc-lemma</strong> (<code>(cc-lemma &lt;clause&gt;)</code>): proves a clause <code>c</code> if it's a
