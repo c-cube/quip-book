@@ -247,9 +247,12 @@ Same as <code>p</code> but the proof must return a unit clause <code>(+ (= lhs r
 <p><strong>r</strong> (<code>(r &lt;term&gt; &lt;proof&gt; &lt;proof&gt;)</code>): resolution on the given pivot
 between the two clauses.</p>
 <p>The proof term <code>(r pivot p1 p2)</code> corresponds to <code>(hres p1 (r pivot p2))</code>.</p>
-<p>The shortcut <code>(r1 &lt;proof&gt; &lt;proof&gt;)</code> allows the user to omit the
-pivot <strong>if</strong> one the the two proofs is unit (ie. has exactly one literal).</p>
-<p>The proof term <code>(r1 p1 p2)</code> corresponds to <code>(hres p1 (r1 p2))</code>.</p>
+</li>
+<li>
+<p><strong>r1</strong> (<code>(r1 &lt;proof&gt; &lt;proof&gt;)</code>): unit resolution.
+The shortcut <code>(r1 p1 p2)</code> allows the user to omit the
+pivot <strong>if</strong> one the the two proofs is unit (ie. has exactly one literal).
+It is the same as <code>(hres p1 (r1 p2))</code>.</p>
 </li>
 <li>
 <p><strong>cc-lemma</strong> (<code>(cc-lemma &lt;clause&gt;)</code>): proves a clause <code>c</code> if it's a
