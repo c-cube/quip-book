@@ -76,10 +76,10 @@
 
   The proof term `(r pivot p1 p2)` corresponds to `(hres p1 (r pivot p2))`.
 
-  The shortcut `(r1 <proof> <proof>)` allows the user to omit the
+- **r1** (`(r1 <proof> <proof>)`): unit resolution.
+  The shortcut `(r1 p1 p2)` allows the user to omit the
   pivot **if** one the the two proofs is unit (ie. has exactly one literal).
-
-  The proof term `(r1 p1 p2)` corresponds to `(hres p1 (r1 p2))`.
+  It is the same as `(hres p1 (r1 p2))`.
 
 - **cc-lemma** (`(cc-lemma <clause>)`): proves a clause `c` if it's a
   tautology of the theory of equality. There should generally be
