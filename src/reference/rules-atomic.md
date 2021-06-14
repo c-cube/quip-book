@@ -9,6 +9,8 @@
   In other words, `(ref c5)` coming after `(defc c5 (cl (+ p) (+ q)) <proof>)`
   is a trivial proof of the clause `(cl (+ p) (+ q))`.
 
+  The serialization might use "@" instead of "ref".
+
 - **refl** (`(refl <term>)`): `(refl t)` is a proof of the
   clause `(cl (+ (= t t)))`.
 
@@ -18,7 +20,7 @@
 
   (TODO: be able to refer to the original formula by file+name if it was provided)
 
-- **hres** (`(hres (init <proof>) <hstep>+)`): a fold-like operation on the
+- **hres** (`(hres <proof> <hstep>+)`): a fold-like operation on the
   initial proof's result. It can represent a resolution step, or hyper-resolution,
   or some boolean paramodulation steps. As opposed to the other rules which
   are mostly useful for preprocessing/simplification of the original problem,
@@ -30,7 +32,7 @@
   they are presented. Assuming the current clause is `C == (cl l1 … lm)`,
   each h-step can be one of the following:
 
-  * **resolution** (`(r (pivot <term>) <proof>)`): `(r (pivot t) proof)`
+  * **resolution** (`(r <term> <proof>)`): `(r t proof)`
     resolves `proof` into a clause `D` which must contain a literal
     `(+ t)` or `(- t)`. Then it performs boolean resolution between
     the current clause `C` and the clause `D` with pivot literal `(+ t)`.
@@ -68,6 +70,16 @@
 
   * **unit-boolean-paramodulation** (`(p1 <proof>)`):
     Same as `p` but the proof must return a unit clause `(+ (= lhs rhs))`.
+
+- **r** (`(r <term> <proof> <proof>)`): resolution on the given pivot
+  between the two clauses.
+
+  The proof term `(r pivot p1 p2)` corresponds to `(hres p1 (r pivot p2))`.
+
+  The shortcut `(r1 <proof> <proof>)` allows the user to omit the
+  pivot **if** one the the two proofs is unit (ie. has exactly one literal).
+
+  The proof term `(r1 p1 p2)` corresponds to `(hres p1 (r1 p2))`.
 
 - **cc-lemma** (`(cc-lemma <clause>)`): proves a clause `c` if it's a
   tautology of the theory of equality. There should generally be
