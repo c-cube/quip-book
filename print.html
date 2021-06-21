@@ -781,7 +781,9 @@ to a proof of <code>(cl (+ (box B)))</code> using <code>box-lift</code>; then we
 on <code>(cl (+ (box B)))</code> and <code>(cl (- (box B)) l1 … ln)</code> to
 obtain <code>(cl l1 … ln)</code>, ie. the original goal <code>A</code>.</p>
 <p>Another possibility is to box a full clause, and use it as an assumption
-in a sub-proof <code>steps</code>. Then <code>box-assume</code> is required to make use of the assumption.</p>
+in a sub-proof using <a href="reference/./rules-composite.html"><code>steps</code></a>.
+Then, <code>box-assume</code> can be used to make use of the assumption by resolving
+it with the <code>(- (box C))</code> literal from <code>box-assume</code>.</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="full-example"><a class="header" href="#full-example">Full example</a></h1>
 <p>We're going to explore a bigger example: the proof of unsatisfiability
 of the SMTLIB problem <code>QF_UF/eq_diamond/eq_diamond2.smt2</code>.</p>

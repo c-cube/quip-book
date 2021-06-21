@@ -211,7 +211,9 @@ to a proof of <code>(cl (+ (box B)))</code> using <code>box-lift</code>; then we
 on <code>(cl (+ (box B)))</code> and <code>(cl (- (box B)) l1 … ln)</code> to
 obtain <code>(cl l1 … ln)</code>, ie. the original goal <code>A</code>.</p>
 <p>Another possibility is to box a full clause, and use it as an assumption
-in a sub-proof <code>steps</code>. Then <code>box-assume</code> is required to make use of the assumption.</p>
+in a sub-proof using <a href="./rules-composite.html"><code>steps</code></a>.
+Then, <code>box-assume</code> can be used to make use of the assumption by resolving
+it with the <code>(- (box C))</code> literal from <code>box-assume</code>.</p>
 
                     </main>
 
