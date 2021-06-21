@@ -174,7 +174,7 @@ one can prove <code>(cl (- (box C)) (+ (box D)))</code> (and conversely) as foll
 <p>Let's assume <code>C</code> is <code>(cl (+ a) (+ b))</code>, <code>D</code> is <code>(cl (+ a2) (+ b2))</code>,
 and we have some clauses <code>PA</code> and <code>PB</code> proving <code>(= a a2)</code> and <code>(= b b2)</code>:</p>
 <pre><code>(steps
- ((hyp_bc (box C)))
+ ((hyp_bc (+ (box C))))
  (
   ; first use box-assume
   (stepc s1 (cl (- (box C)) (+ a) (+ b)) (box-assume C))
