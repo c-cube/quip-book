@@ -8,7 +8,7 @@ and we have some clauses `PA` and `PB` proving `(= a a2)` and `(= b b2)`:
 
 ```
 (steps
- ((hyp_bc (box C)))
+ ((hyp_bc (+ (box C))))
  (
   ; first use box-assume
   (stepc s1 (cl (- (box C)) (+ a) (+ b)) (box-assume C))
