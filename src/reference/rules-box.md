@@ -44,7 +44,9 @@ on `(cl (+ (box B)))` and `(cl (- (box B)) l1 … ln)` to
 obtain `(cl l1 … ln)`, ie. the original goal `A`.
 
 Another possibility is to box a full clause, and use it as an assumption
-in a sub-proof `steps`. Then `box-assume` is required to make use of the assumption.
+in a sub-proof using [`steps`](./rules-composite.md).
+Then, `box-assume` can be used to make use of the assumption by resolving
+it with the `(- (box C))` literal from `box-assume`.
 
 
 
