@@ -28,7 +28,7 @@ That said, we have a few rules to deal with boxes:
 
 - **box-proof** (`(box-proof <proof>)`):
   given a proof `p` with conclusion `C`, this returns a proof
-  whose conclusion is `(box C)`. Semantically it does nothing.
+  whose conclusion is `(cl (+ (box C)))`. Semantically it is merely the identity.
 
 An interesting possibility offered by `box` is simplifications in a tactic framework.
 A simplification rule might take a _goal_ clause `A`, and simplify it
@@ -41,7 +41,7 @@ steps backward to get back to the literals of `A`.
 Once the goal `B` is proved, we obtain a proof of `B` which we can lift
 to a proof of `(cl (+ (box B)))` using `box-lift`; then we only have to do unit-resolution
 on `(cl (+ (box B)))` and `(cl (- (box B)) l1 … ln)` to
-obtain `(cl l1 … ln)`, ie. was the original goal `A`.
+obtain `(cl l1 … ln)`, ie. the original goal `A`.
 
 Another possibility is to box a full clause, and use it as an assumption
 in a sub-proof `steps`. Then `box-assume` is required to make use of the assumption.

@@ -135,6 +135,9 @@
   transforms some literals in a clause. It turns `(- (not a))` into `(+ a)`,
   and `(+ (not a))` into `(- a)`.
 
+- **true is true** (`t-is-t`): the lemma `(cl (+ true))`.
+- **true neq false** (`t-ne-f`): the lemma `(cl (- (= true false)))`.
+
 - **bool-c** (`(bool-c <name> <term>+)`): `(bool-c <name> <terms>)`
   proves a boolean tautology of depth 1 using the
   particular sub-rule named `<name>` with some term argument(s).
