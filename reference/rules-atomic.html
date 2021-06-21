@@ -305,6 +305,12 @@ transforms some literals in a clause. It turns <code>(- (not a))</code> into <co
 and <code>(+ (not a))</code> into <code>(- a)</code>.</p>
 </li>
 <li>
+<p><strong>true is true</strong> (<code>t-is-t</code>): the lemma <code>(cl (+ true))</code>.</p>
+</li>
+<li>
+<p><strong>true neq false</strong> (<code>t-ne-f</code>): the lemma <code>(cl (- (= true false)))</code>.</p>
+</li>
+<li>
 <p><strong>bool-c</strong> (<code>(bool-c &lt;name&gt; &lt;term&gt;+)</code>): <code>(bool-c &lt;name&gt; &lt;terms&gt;)</code>
 proves a boolean tautology of depth 1 using the
 particular sub-rule named <code>&lt;name&gt;</code> with some term argument(s).

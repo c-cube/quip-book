@@ -608,6 +608,12 @@ transforms some literals in a clause. It turns <code>(- (not a))</code> into <co
 and <code>(+ (not a))</code> into <code>(- a)</code>.</p>
 </li>
 <li>
+<p><strong>true is true</strong> (<code>t-is-t</code>): the lemma <code>(cl (+ true))</code>.</p>
+</li>
+<li>
+<p><strong>true neq false</strong> (<code>t-ne-f</code>): the lemma <code>(cl (- (= true false)))</code>.</p>
+</li>
+<li>
 <p><strong>bool-c</strong> (<code>(bool-c &lt;name&gt; &lt;term&gt;+)</code>): <code>(bool-c &lt;name&gt; &lt;terms&gt;)</code>
 proves a boolean tautology of depth 1 using the
 particular sub-rule named <code>&lt;name&gt;</code> with some term argument(s).
@@ -760,7 +766,7 @@ in a negative literal. Once we actually prove <code>C</code> we can discharge <c
 <li>
 <p><strong>box-proof</strong> (<code>(box-proof &lt;proof&gt;)</code>):
 given a proof <code>p</code> with conclusion <code>C</code>, this returns a proof
-whose conclusion is <code>(box C)</code>. Semantically it does nothing.</p>
+whose conclusion is <code>(cl (+ (box C)))</code>. Semantically it is merely the identity.</p>
 </li>
 </ul>
 <p>An interesting possibility offered by <code>box</code> is simplifications in a tactic framework.
@@ -773,7 +779,7 @@ steps backward to get back to the literals of <code>A</code>.</p>
 <p>Once the goal <code>B</code> is proved, we obtain a proof of <code>B</code> which we can lift
 to a proof of <code>(cl (+ (box B)))</code> using <code>box-lift</code>; then we only have to do unit-resolution
 on <code>(cl (+ (box B)))</code> and <code>(cl (- (box B)) l1 … ln)</code> to
-obtain <code>(cl l1 … ln)</code>, ie. was the original goal <code>A</code>.</p>
+obtain <code>(cl l1 … ln)</code>, ie. the original goal <code>A</code>.</p>
 <p>Another possibility is to box a full clause, and use it as an assumption
 in a sub-proof <code>steps</code>. Then <code>box-assume</code> is required to make use of the assumption.</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="full-example"><a class="header" href="#full-example">Full example</a></h1>
