@@ -255,7 +255,7 @@ pivot <strong>if</strong> one the the two proofs is unit (ie. has exactly one li
 It is the same as <code>(hres p1 (r1 p2))</code>.</p>
 </li>
 <li>
-<p><strong>cc-lemma</strong> (<code>(cc-lemma &lt;clause&gt;)</code>): proves a clause <code>c</code> if it's a
+<p><strong>cc-lemma</strong> (<code>(ccl &lt;clause&gt;)</code>): proves a clause <code>c</code> if it's a
 tautology of the theory of equality. There should generally be
 n negative literals and one positive literal, all of them equations.</p>
 <p>An example:</p>
@@ -315,7 +315,8 @@ and <code>(+ (not a))</code> into <code>(- a)</code>.</p>
 proves a boolean tautology of depth 1 using the
 particular sub-rule named <code>&lt;name&gt;</code> with some term argument(s).
 In other words, it corresponds to one construction or destruction axioms for
-the boolean connective <code>and</code>, <code>or</code>, <code>=&gt;</code>, boolean <code>=</code>, <code>xor</code>, <code>not</code>.</p>
+the boolean connective <code>and</code>, <code>or</code>, <code>=&gt;</code>, boolean <code>=</code>, <code>xor</code>, <code>not</code>,
+<code>forall</code>, <code>exists</code>.</p>
 <p>The possible axioms are:</p>
 <table><thead><tr><th>rule</th><th>axiom</th></tr></thead><tbody>
 <tr><td><code>(and-i (and A1…An))</code></td><td><code>(cl (- A1) … (- An) (+ (and A1…An)))</code></td></tr>
@@ -335,6 +336,10 @@ the boolean connective <code>and</code>, <code>or</code>, <code>=&gt;</code>, bo
 <tr><td><code>(xor-e+ (xor A B))</code></td><td><code>(cl (- (xor A B)) (+ A) (+ B))</code></td></tr>
 <tr><td><code>(xor-i (xor A B) B)</code></td><td><code>(cl (+ A) (- B) (+ (xor A B)))</code></td></tr>
 <tr><td><code>(xor-i (xor A B) A)</code></td><td><code>(cl (- A) (+ B) (+ (xor A B)))</code></td></tr>
+<tr><td><code>(forall-e P E)</code></td><td><code>(cl (- (forall P)) (+ (P E)))</code></td></tr>
+<tr><td><code>(forall-i P</code></td><td><code>(cl (- (= (\x. P x) true)) (+ (forall P)))</code></td></tr>
+<tr><td><code>(exists-e P)</code></td><td><code>(cl (- (exists P)) (+ (P (select P))))</code></td></tr>
+<tr><td><code>(exists-i P)</code></td><td><code>cl (- (P x)) (+ (exists P))</code> (where <code>x</code> fresh)</td></tr>
 </tbody></table>
 </li>
 <li>
@@ -385,6 +390,18 @@ in <code>body</code> in a capture avoiding way.</p>
     (\lambda x:\tau. t)~ x = t
   \\]
   -->
+<ul>
+<li>
+<p><strong>substitution</strong> (<code>(subst &lt;subst&gt; &lt;proof&gt;)</code>): <code>(subst sigma p)</code>
+returns the same claues as <code>p</code>, but where free variables have been replaced
+according to the substitution. A substitution has the form <code>(x1 e1 x2 e2 … xn en)</code>
+where <code>x_i</code> are names (variables) and <code>e_i</code> are expressions.
+Bindings are parallel (substitution doesn't apply recursively).</p>
+<p>For example, <code>(subst (x a y (f x)) p)</code>, when <code>p</code> proves <code>(cl (+ (p x)) (+ q y))</code>,
+proves <code>(cl (+ (p a)) (+ q (f x)))</code>. <code>x</code> is not substituted again in the
+image of <code>y</code>.</p>
+</li>
+</ul>
 <p>TODO: instantiation</p>
 <p>TODO: reasoning under quantifiers</p>
 
