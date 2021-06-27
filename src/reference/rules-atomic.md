@@ -81,7 +81,7 @@
   pivot **if** one the the two proofs is unit (ie. has exactly one literal).
   It is the same as `(hres p1 (r1 p2))`.
 
-- **cc-lemma** (`(cc-lemma <clause>)`): proves a clause `c` if it's a
+- **cc-lemma** (`(ccl <clause>)`): proves a clause `c` if it's a
   tautology of the theory of equality. There should generally be
   n negative literals and one positive literal, all of them equations.
 
@@ -142,12 +142,13 @@
   proves a boolean tautology of depth 1 using the
   particular sub-rule named `<name>` with some term argument(s).
   In other words, it corresponds to one construction or destruction axioms for
-  the boolean connective `and`, `or`, `=>`, boolean `=`, `xor`, `not`.
+  the boolean connective `and`, `or`, `=>`, boolean `=`, `xor`, `not`,
+  `forall`, `exists`.
 
   The possible axioms are:
 
-  | rule | axiom |
-  |------| --|
+  | rule   | axiom |
+  |------- | ------|
   | `(and-i (and A1…An))` | `(cl (- A1) … (- An) (+ (and A1…An)))` |
   | `(and-e (and A1…An) Ai)` | `(cl (- (and A1…An)) (+ Ai))` |
   | `(or-e (or A1…An))` | `(cl (- (or A1…An)) (+ A1) … (+ An))` |
@@ -165,6 +166,10 @@
   | `(xor-e+ (xor A B))` | `(cl (- (xor A B)) (+ A) (+ B))` |
   | `(xor-i (xor A B) B)` | `(cl (+ A) (- B) (+ (xor A B)))` |
   | `(xor-i (xor A B) A)` | `(cl (- A) (+ B) (+ (xor A B)))` |
+  | `(forall-e P E)` | `(cl (- (forall P)) (+ (P E)))` |
+  | `(forall-i P` | `(cl (- (= (\x. P x) true)) (+ (forall P)))` |
+  | `(exists-e P)` | `(cl (- (exists P)) (+ (P (select P))))` |
+  | `(exists-i P)` | `cl (- (P x)) (+ (exists P))` (where `x` fresh) |
 
 - **bool-eq** (`(bool-eq <term> <term>)`): `(bool-eq t u)` proves
   the clause `(cl (+ (= t u)))` (where `t` and `u` are both boolean terms)
@@ -215,6 +220,16 @@
     (\lambda x:\tau. t)~ x = t
   \\]
   -->
+
+- **substitution** (`(subst <subst> <proof>)`): `(subst sigma p)`
+  returns the same claues as `p`, but where free variables have been replaced
+  according to the substitution. A substitution has the form `(x1 e1 x2 e2 … xn en)`
+  where `x_i` are names (variables) and `e_i` are expressions.
+  Bindings are parallel (substitution doesn't apply recursively).
+
+  For example, `(subst (x a y (f x)) p)`, when `p` proves `(cl (+ (p x)) (+ q y))`,
+  proves `(cl (+ (p a)) (+ q (f x)))`. `x` is not substituted again in the
+  image of `y`.
 
 
 TODO: instantiation
