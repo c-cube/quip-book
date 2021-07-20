@@ -755,6 +755,22 @@ or to produce a proof of unsatisfiability for
 the SMTLIB v2.6 statement <code>(check-sat-assuming (&lt;lit&gt;+))</code>.</p>
 </li>
 </ul>
+<h2 id="toplevel-composite-rule"><a class="header" href="#toplevel-composite-rule">Toplevel composite rule</a></h2>
+<p>The syntax allows the toplevel composite rule
+(i.e. the main proof, as opposed to a subproof)
+to be <em>flattened</em> into a list of S-expressions.</p>
+<p>It's probably not very useful to have assumptions here<sup class="footnote-reference"><a href="#1">1</a></sup>.</p>
+<p>For example, a proof could look like:</p>
+<pre><code>(quip 1)
+
+(step1)
+(step2)
+(step3)
+…
+</code></pre>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>famous last words.</p>
+</div>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="box-rules"><a class="header" href="#box-rules">Box rules</a></h1>
 <p>Box is a term constructor that allows abstracting a clause into an opaque
 constant term. This way, a whole clause can become a literal in another clause
