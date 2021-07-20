@@ -11,7 +11,8 @@ TODO: zipperposition
 
 ## Proof-checking tools
 
-TODO: reference checker
+- [Quip](https://github.com/c-cube/quip) (WIP) is a proof checker
+  in OCaml.
 
 ## Others
 
