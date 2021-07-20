@@ -42,4 +42,24 @@ The main structuring construct for proofs is `steps`. Its structure is
   or to produce a proof of unsatisfiability for
   the SMTLIB v2.6 statement `(check-sat-assuming (<lit>+))`.
 
+## Toplevel composite rule
 
+The syntax allows the toplevel composite rule
+(i.e. the main proof, as opposed to a subproof)
+to be _flattened_ into a list of S-expressions.
+
+It's probably not very useful to have assumptions here[^1].
+
+For example, a proof could look like:
+
+```
+(quip 1)
+
+(step1)
+(step2)
+(step3)
+…
+```
+
+
+[^1]: famous last words.
