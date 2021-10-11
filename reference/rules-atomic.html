@@ -255,6 +255,12 @@ pivot <strong>if</strong> one the the two proofs is unit (ie. has exactly one li
 It is the same as <code>(hres p1 (r1 p2))</code>.</p>
 </li>
 <li>
+<p><strong>rup</strong> (<code>(rup &lt;clause&gt; &lt;proof&gt;+)</code>): <code>(rup c steps)</code> proves the clause <code>c</code>
+by <em>reverse unit propagation</em> (RUP) on the results of <code>steps</code>.
+This corresponds to linear resolution but without specifying pivots nor
+the order.</p>
+</li>
+<li>
 <p><strong>cc-lemma</strong> (<code>(ccl &lt;clause&gt;)</code>): proves a clause <code>c</code> if it's a
 tautology of the theory of equality. There should generally be
 n negative literals and one positive literal, all of them equations.</p>
@@ -297,6 +303,39 @@ could be expanded (using fresh names for steps) to:</p>
       (r1 (ref c_2))
       …
       (r1 (ref c_n))))))
+</code></pre>
+</li>
+<li>
+<p><strong>clause-rw</strong> (<code>(clause-rw &lt;clause&gt; &lt;proof&gt; (&lt;proof&gt;*))</code>):
+the term <code>(clause-rw c p steps)</code> proves <code>c</code> from the result <code>c0</code> of <code>p</code>
+using a series of equations in <code>steps</code>.
+Each equation in step is used to rewrite at least one literal of <code>c0</code>; no new
+literal is added, <code>c</code> is obtained purely by rewriting literals of <code>c0</code>,
+(or simplifying away if the literal rewrites to <code>false</code>).</p>
+<p>A possible way to check this step is as follows.</p>
+<ul>
+<li>Compute <code>c0</code> and the results of steps <code>d1, …, dn</code> which should be
+positive equations or positive atoms (<code>a</code> standing for <code>a=true</code>).</li>
+<li>Given <code>c == (a1 \/ a2 \/ … \/ a_m)</code>, assert <code>¬a1, ¬a2, …, ¬a_m</code> into a
+congruence closure (where asserting <code>a</code> means asserting <code>a = true</code>,
+and asserting <code>¬a</code> means asserting <code>a = false</code>).</li>
+<li>For each literal <code>b</code> of <code>c0</code> in turn, assert <code>b</code> into the congruence closure
+and query for <code>true == false</code> before undoing the assertion of <code>b</code>.
+If <code>true == false</code> can be proved from each case of <code>b</code>, then the step is
+valid, because <code>c0 /\ d1 … dn |= c</code>.</li>
+</ul>
+<p>This rule is convenient for preprocessing of clauses.
+Each term can be preprocessed (rewritten into a simpler form) individually,
+possibly leading to the literal beeing removed (when shown absurd by preprocessing),
+and <code>clause-rw</code> can be used to tie together all these rewriting steps.</p>
+<p>For example, <code>(cl (+ (ite (x+1 &gt; x) p q)) (+ false) (+ t))</code>
+could be simplified into <code>(cl (+ p) (+ u))</code> assuming <code>t</code> simplifies to <code>u</code>.
+The proof would look like:</p>
+<pre><code>(stepc c (cl (+ p) (+ u))
+  (clause-rw (cl (+ p) (+ u))
+    (&lt;proof of input clause)
+    ((&lt;proof of t=u)
+     (&lt;proof of ite simplification&gt;))))
 </code></pre>
 </li>
 <li>
@@ -402,6 +441,8 @@ proves <code>(cl (+ (p a)) (+ q (f x)))</code>. <code>x</code> is not substitute
 image of <code>y</code>.</p>
 </li>
 </ul>
+<p>TODO: lra (in own file)
+TODO: datatypes (in own file)</p>
 <p>TODO: instantiation</p>
 <p>TODO: reasoning under quantifiers</p>
 
