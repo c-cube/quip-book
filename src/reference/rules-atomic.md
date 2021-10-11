@@ -81,6 +81,11 @@
   pivot **if** one the the two proofs is unit (ie. has exactly one literal).
   It is the same as `(hres p1 (r1 p2))`.
 
+- **rup** (`(rup <clause> <proof>+)`): `(rup c steps)` proves the clause `c`
+  by _reverse unit propagation_ (RUP) on the results of `steps`.
+  This corresponds to linear resolution but without specifying pivots nor
+  the order.
+
 - **cc-lemma** (`(ccl <clause>)`): proves a clause `c` if it's a
   tautology of the theory of equality. There should generally be
   n negative literals and one positive literal, all of them equations.
@@ -129,6 +134,41 @@
         (r1 (ref c_2))
         …
         (r1 (ref c_n))))))
+  ```
+
+- **clause-rw** (`(clause-rw <clause> <proof> (<proof>*))`):
+  the term `(clause-rw c p steps)` proves `c` from the result `c0` of `p`
+  using a series of equations in `steps`.
+  Each equation in step is used to rewrite at least one literal of `c0`; no new
+  literal is added, `c` is obtained purely by rewriting literals of `c0`,
+  (or simplifying away if the literal rewrites to `false`).
+
+  A possible way to check this step is as follows.
+  * Compute `c0` and the results of steps `d1, …, dn` which should be
+    positive equations or positive atoms (`a` standing for `a=true`).
+  * Given `c == (a1 \/ a2 \/ … \/ a_m)`, assert `¬a1, ¬a2, …, ¬a_m` into a
+    congruence closure (where asserting `a` means asserting `a = true`,
+    and asserting `¬a` means asserting `a = false`).
+  * For each literal `b` of `c0` in turn, assert `b` into the congruence closure
+    and query for `true == false` before undoing the assertion of `b`.
+    If `true == false` can be proved from each case of `b`, then the step is
+    valid, because `c0 /\ d1 … dn |= c`.
+
+  This rule is convenient for preprocessing of clauses.
+  Each term can be preprocessed (rewritten into a simpler form) individually,
+  possibly leading to the literal beeing removed (when shown absurd by preprocessing),
+  and `clause-rw` can be used to tie together all these rewriting steps.
+
+  For example, `(cl (+ (ite (x+1 > x) p q)) (+ false) (+ t))`
+  could be simplified into `(cl (+ p) (+ u))` assuming `t` simplifies to `u`.
+  The proof would look like:
+
+  ```
+  (stepc c (cl (+ p) (+ u))
+    (clause-rw (cl (+ p) (+ u))
+      (<proof of input clause)
+      ((<proof of t=u)
+       (<proof of ite simplification>))))
   ```
 
 - **nn** (`(nn <proof>)`): not-normalization: a normalization step that
@@ -231,6 +271,8 @@
   proves `(cl (+ (p a)) (+ q (f x)))`. `x` is not substituted again in the
   image of `y`.
 
+TODO: lra (in own file)
+TODO: datatypes (in own file)
 
 TODO: instantiation
 
