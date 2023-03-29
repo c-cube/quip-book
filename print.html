@@ -211,7 +211,7 @@ but is distinct from the term \( \lnot t \) because the polarity (the sign)
 is only relevant in the context of a clause.</p>
 <p>We will denote a negative literal as \( - t \) and a positive
 literal as \( + t \).</p>
-<p>An example clause might be: \[ \{ - (a=b), - (c=d), + ((f~ a~ c) = (~f b~ d)) \} \]
+<p>An example clause might be: \[ \{ - (a=b), - (c=d), + ((f~ a~ c) = (f~ b~ d)) \} \]
 It represents the basic congruence lemma:
 \[ a=b, c=d \vdash f~ a~ c = f~ b~ d    \]</p>
 </li>
@@ -305,7 +305,7 @@ files. Using definitions we can preserve a lot of sharing in the proofs.</p>
 </li>
 <li>
 <p><code>(stepc c0 …)</code> is the first real step of the proof.
-Here, <code>c0</code> is the clause <code>{ - $t2, - $t3, + $t5</code>,
+Here, <code>c0</code> is the clause <code>{ - $t2, - $t3, + $t5 }</code>,
 and is proved by the proof <code>(cc-lemma …)</code> (a congruence closure lemma,
 i.e. a tautology of equality). It is, in essence, the proof we seek;
 the rest of the steps are used to derive a contradiction by
