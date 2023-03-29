@@ -48,7 +48,7 @@ more efficient binary format relatively early on.
   files. Using definitions we can preserve a lot of sharing in the proofs.
 
 - `(stepc c0 …)` is the first real step of the proof.
-  Here, `c0` is the clause `{ - $t2, - $t3, + $t5`,
+  Here, `c0` is the clause `{ - $t2, - $t3, + $t5 }`,
   and is proved by the proof `(cc-lemma …)` (a congruence closure lemma,
   i.e. a tautology of equality). It is, in essence, the proof we seek;
   the rest of the steps are used to derive a contradiction by

@@ -29,7 +29,7 @@ _clauses_, and _proof steps_.
   We will denote a negative literal as \\( - t \\) and a positive
   literal as \\( + t \\).
 
-  An example clause might be: \\[ \\{ - (a=b), - (c=d), + ((f~ a~ c) = (~f b~ d)) \\} \\]
+  An example clause might be: \\[ \\{ - (a=b), - (c=d), + ((f~ a~ c) = (f~ b~ d)) \\} \\]
   It represents the basic congruence lemma:
   \\[ a=b, c=d \vdash f~ a~ c = f~ b~ d    \\]
 
