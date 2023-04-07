@@ -35,5 +35,5 @@ the result of this sub-proof
 is thus `(cl (- (box C)) (+ (box D)))`.
 
 We used the assumption mechanism to get rid of `(- (box C))` locally
-to avoiding boxing it along with the other literals
+to avoid boxing it along with the other literals
 when we apply `box-proof`.
